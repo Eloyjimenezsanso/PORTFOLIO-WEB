@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eloy Jiménez Sansó</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ── NAVBAR ─────────────────────────────────────── -->
+    <nav id="navbar">
+        <a href="#" class="nav-logo">Eloy Jiménez Sansó</a>
+        <div class="nav-links">
+            <a href="#proyectos">Proyectos</a>
+            <a href="#sobre-mi">Sobre Mí</a>
+        </div>
+        <a href="#contacto" class="nav-contacto">Contacto</a>
+    </nav>
+
+    <!-- ── HERO ───────────────────────────────────────── -->
+    <section id="hero">
+        <div class="hero-content">
+            <img src="assets/liebre.png" alt="Liebre" class="hero-liebre" id="heroLiebre">
+            <p class="hero-text">
+                Diseñador gráfico integral, especializado en<br>
+                <em>Motion Graphics &amp; Web Design.</em><br>
+                Ayudo a las marcas a conectar con las personas<br>
+                desde una perspectiva actual y distintiva.
+            </p>
+        </div>
+    </section>
+
+    <!-- ── INTRO ANIMATION (encima del ticker) ────────── -->
+    <div id="introOverlay">
+        <!-- Las cards de intro se generan desde JS -->
+    </div>
+
+    <!-- ── TICKER ─────────────────────────────────────── -->
+    <section id="proyectos" class="ticker-section">
+        <div class="ticker-track" id="tickerTrack">
+            <!-- Cards generadas desde JS -->
+        </div>
+    </section>
+
+    <!-- ── SOBRE MÍ ────────────────────────────────────── -->
+    <section id="sobre-mi">
+        <div class="sobre-left">
+            <img src="assets/sobre-foto-1.jpg" alt="Foto ordenador" class="sobre-img">
+            <div class="sobre-card habilidades">
+                <h3>Habilidades</h3>
+                <div class="sobre-col">
+                    <p class="label">Programas</p>
+                    <p>Paquete Adobe Creative Suit</p>
+                    <p>Figma · Framer · HTML/CSS</p>
+                    <p>Cinema 4D · Blender</p>
+                    <p>Midjourney · Touchdesigner</p>
+                    <p>Paquete Office</p>
+                </div>
+                <div class="sobre-col" style="margin-top:1.5rem">
+                    <p class="label">Servicios</p>
+                    <p>Branding</p>
+                    <p>Motion graphics</p>
+                    <p>Art Direction</p>
+                    <p>Illustration</p>
+                    <p>Packaging</p>
+                    <p>Editorial Design</p>
+                    <p>Digital design</p>
+                    <p>UX / UI</p>
+                </div>
+            </div>
+        </div>
+        <div class="sobre-right">
+            <img src="assets/sobre-foto-2.jpg" alt="Foto papeles" class="sobre-img">
+            <div class="sobre-card experiencia">
+                <h3>Experiencia</h3>
+                <div class="exp-item">
+                    <span class="exp-empresa">LOTTUSSE 1877</span>
+                    <span class="exp-fecha">2024 - PRESENTE</span>
+                </div>
+                <div class="exp-item">
+                    <span class="exp-empresa">TELEFÓNICA</span>
+                    <span class="exp-fecha">2023 - 2024</span>
+                </div>
+                <div class="exp-item">
+                    <span class="exp-empresa">ECOISLAND ADVENTURE</span>
+                    <span class="exp-fecha">2023</span>
+                </div>
+                <div class="exp-item">
+                    <span class="exp-empresa">GRDAR</span>
+                    <span class="exp-fecha">2022</span>
+                </div>
+                <div class="exp-item">
+                    <span class="exp-empresa">GS CONECTA</span>
+                    <span class="exp-fecha">2021</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── FOOTER / CONTACTO ──────────────────────────── -->
+    <footer id="contacto">
+        <div class="footer-cta">
+            <p>¿Tienes un proyecto en mente?</p>
+            <p><em>Hagámoslo realidad</em></p>
+            <p class="footer-sub">Envíame un email y empecemos</p>
+        </div>
+        <div class="footer-info">
+            <div class="footer-col">
+                <p class="label">EMAIL</p>
+                <a href="mailto:eloy.jimenezsanso@gmail.com">eloy.jimenezsanso@gmail.com</a>
+            </div>
+            <div class="footer-col">
+                <p class="label">TELF.</p>
+                <a href="tel:+34647245027">+34 647 24 50 27</a>
+            </div>
+            <div class="footer-col">
+                <a href="https://www.linkedin.com/in/eloy-jiménez-sansó-22b19323a" target="_blank" class="footer-linkedin">LINKEDIN ↗</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ── PROJECT OVERLAY ────────────────────────────── -->
+    <div id="projectOverlay" class="overlay-hidden">
+        <button id="overlayClose">✕</button>
+        <div class="overlay-inner">
+            <div class="overlay-sidebar">
+                <h2 id="overlayTitle"></h2>
+                <p id="overlayYear" class="overlay-year"></p>
+                <p id="overlayDesc" class="overlay-desc"></p>
+                <div id="overlayTools">
+                    <p class="label">Programas</p>
+                    <div id="overlayToolsList"></div>
+                </div>
+            </div>
+            <div class="overlay-content" id="overlayContent">
+                <!-- Imágenes y vídeos del proyecto -->
+            </div>
+        </div>
+    </div>
+    <div id="overlayBackdrop"></div>
+
+    <script src="projects.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
