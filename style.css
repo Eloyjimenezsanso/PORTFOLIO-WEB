@@ -360,18 +360,25 @@ body {
 .sobre-img-placeholder {
     width: 100%;
     display: block;
-    /* La escala la gestiona JS — overflow hidden para que no se recorte */
     overflow: hidden;
+    /* Forzar contexto de apilamiento para Safari */
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    isolation: isolate;
 }
 
-/* El elemento interior (div de color) recibe la escala */
+/* El elemento interior recibe la escala */
 .sobre-img-placeholder-inner {
     width: 100%;
     height: 100%;
     will-change: transform;
     transform: scale(0.92);
+    -webkit-transform: scale(0.92);
     transform-origin: center center;
-    transition: none; /* JS maneja la interpolación */
+    -webkit-transform-origin: center center;
+    /* Forzar GPU en Safari */
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
 
 .sobre-img-placeholder img {

@@ -119,7 +119,9 @@ function applySobreParallax() {
         // Clamp estricto: nunca por debajo de scaleFrom ni por encima de scaleTo
         const scale    = Math.min(scaleTo, Math.max(scaleFrom, scaleFrom + (scaleTo - scaleFrom) * eased))
 
-        inner.style.transform = `scale(${scale.toFixed(4)})`
+        const scaleStr = `scale(${scale.toFixed(4)})`
+        inner.style.transform = scaleStr
+        inner.style.webkitTransform = scaleStr
     })
 
     // ── PARALLAX TEXTO ───────────────────────────────────────
