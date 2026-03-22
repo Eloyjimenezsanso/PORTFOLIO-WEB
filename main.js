@@ -99,8 +99,6 @@ function applySobreParallax() {
     if (col2) col2.style.transform = `translateY(${BASE_OFFSET - scrolled * 0.22}px)`
 
     // ── ESCALA POR IMAGEN ────────────────────────────────────
-    // Empieza en 0.92 cuando el borde superior entra por abajo de la pantalla.
-    // Llega a 1.0 cuando el centro de la imagen alcanza el centro de la ventana.
     const scaleFrom = 0.92
     const scaleTo   = 1.0
     const winH      = window.innerHeight
@@ -111,14 +109,15 @@ function applySobreParallax() {
 
         const rect = placeholder.getBoundingClientRect()
 
-        // startTrigger: borde superior entra por abajo → progress 0, scale 0.92
-        // endTrigger:   centro imagen = centro pantalla → progress 1, scale 1.0
+        // progress: 0 cuando entra por abajo, 1 cuando su centro llega al centro de pantalla
         const startTrigger = winH
-        const endTrigger   = winH * 0.5 - rect.height * 0.5
+        const endTrigger   = winH * 0.5
 
+        // Usamos el borde superior de la imagen como referencia
         const progress = Math.max(0, Math.min(1, (startTrigger - rect.top) / (startTrigger - endTrigger)))
         const eased    = 1 - Math.pow(1 - progress, 2)
-        const scale    = scaleFrom + (scaleTo - scaleFrom) * eased
+        // Clamp estricto: nunca por debajo de scaleFrom ni por encima de scaleTo
+        const scale    = Math.min(scaleTo, Math.max(scaleFrom, scaleFrom + (scaleTo - scaleFrom) * eased))
 
         inner.style.transform = `scale(${scale.toFixed(4)})`
     })
