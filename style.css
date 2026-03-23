@@ -301,7 +301,7 @@ body {
 
 /* FILA 3 */
 .hab-img--4  { grid-column: 1; grid-row: 3; aspect-ratio: 1/1; }
-.hab-text--3 { grid-column: 2; grid-row: 3; display: flex; flex-direction: row; justify-content: center; padding: 24px; gap: 6rem; }
+.hab-text--3 { grid-column: 2; grid-row: 3; display: flex; flex-direction: row; justify-content: center; padding: 24px; gap: 6rem; align-items: center; }
 .hab-img--5  { grid-column: 3; grid-row: 3; aspect-ratio: 1/1; }
 
 /* Imagen wrapper */
