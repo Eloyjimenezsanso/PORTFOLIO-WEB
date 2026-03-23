@@ -129,7 +129,7 @@ body {
     align-items: flex-start;
     text-align: left;
     gap: 8px;
-    padding: 25vh 0 0 25px;
+    padding: 45vh 0 0 25px;
     justify-content: flex-start;
     will-change: transform;
     position: sticky;
@@ -270,10 +270,8 @@ body {
 }
 
 .sobre-bloque--habilidades {
-    display: grid;
-    grid-template-columns: 50% 50%;
-    min-height: 200vh;
-    overflow: visible;
+    width: 100%;
+    padding: 80px 25px;
 }
 
 .sobre-bloque--experiencia {
@@ -284,24 +282,70 @@ body {
     overflow: hidden;
 }
 
-.sobre-texto {
-    position: sticky;
-    top: 0;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 0 0 0 25px;
-    align-self: start;
+/* ── HAB GRID ────────────────────────────────────────────── */
+.hab-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    width: 100%;
 }
 
-.sobre-nombre {
-    font-family: 'Times New Roman', Times, serif;
-    font-size: 22px;
-    font-weight: 400;
-    letter-spacing: -0.01em;
-    margin-bottom: 48px;
-    color: var(--fg);
+/* FILA 1 */
+.hab-img--1  { grid-column: 1; grid-row: 1; aspect-ratio: 4/5; }
+.hab-img--2  { grid-column: 2; grid-row: 1; aspect-ratio: 4/5; }
+.hab-text--1 { grid-column: 3; grid-row: 1; display: flex; flex-direction: column; justify-content: flex-end; padding: 0 0 16px 24px; }
+
+/* FILA 2 */
+.hab-text--2 { grid-column: 1; grid-row: 2; display: flex; flex-direction: column; justify-content: center; padding: 24px; }
+.hab-img--3  { grid-column: 2 / 4; grid-row: 2; aspect-ratio: 16/9; }
+
+/* FILA 3 */
+.hab-img--4  { grid-column: 1; grid-row: 3; aspect-ratio: 1/1; }
+.hab-text--3 { grid-column: 2; grid-row: 3; display: flex; flex-direction: column; justify-content: center; padding: 24px; }
+.hab-img--5  { grid-column: 3; grid-row: 3; aspect-ratio: 1/1; }
+
+/* Imagen wrapper */
+.hab-img {
+    overflow: hidden;
+    width: 100%;
+}
+
+.hab-img-inner {
+    width: 100%;
+    height: 100%;
+    transform-origin: center center;
+    -webkit-transform-origin: center center;
+    will-change: transform, opacity;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+.hab-img-inner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Estado inicial — oculto, zoom out */
+.hab-reveal .hab-img-inner {
+    opacity: 0;
+    transform: scale(1.05);
+    -webkit-transform: scale(1.05);
+    transition: opacity 0.9s ease, transform 0.9s var(--ease-out);
+    -webkit-transition: opacity 0.9s ease, -webkit-transform 0.9s var(--ease-out);
+}
+
+/* Visible — fade in + zoom a 1.0 */
+.hab-reveal.is-visible .hab-img-inner {
+    opacity: 1;
+    transform: scale(1.0);
+    -webkit-transform: scale(1.0);
+}
+
+/* Parallax interno — JS aplica translateY al inner sin romper el crop */
+.hab-reveal.is-visible .hab-img-inner {
+    transition: opacity 0.9s ease, transform 0.9s var(--ease-out);
 }
 
 .sobre-habilidades-titulo {
@@ -310,11 +354,6 @@ body {
     font-weight: 400;
     margin-bottom: 24px;
     color: var(--fg);
-}
-
-.sobre-habilidades-grid {
-    display: flex;
-    gap: 60px;
 }
 
 .sobre-hab-col {
@@ -333,56 +372,6 @@ body {
     text-transform: uppercase;
     color: var(--muted);
     margin-bottom: 8px;
-}
-
-/* Columna derecha — grid de imágenes con parallax */
-.sobre-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    padding: 8px;
-    align-items: start;
-    will-change: transform;
-}
-
-.sobre-grid-col {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    will-change: transform;
-}
-
-/* Col2 empieza ya desplazada 180px abajo */
-#sobreCol2 {
-    transform: translateY(180px);
-}
-
-.sobre-img-placeholder {
-    width: 100%;
-    display: block;
-    overflow: hidden;
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-}
-
-.sobre-img-placeholder-inner {
-    width: 100%;
-    height: 100%;
-    display: block;
-    will-change: transform;
-    transform: scale(0.92);
-    -webkit-transform: scale(0.92);
-    transform-origin: center center;
-    -webkit-transform-origin: center center;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-}
-
-.sobre-img-placeholder img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
 }
 
 /* ── EXPERIENCIA ─────────────────────────────────────────── */
@@ -834,73 +823,71 @@ body.intro-active #navbar { opacity: 0; }
         min-height: auto;
     }
 
-    .sobre-texto {
-        position: relative;
-        height: auto;
-        padding: 60px 25px 40px 25px;
-        width: 100%;
+    /* ── HABILIDADES MOBILE ──────────────────────────────── */
+    .sobre-bloque--habilidades {
+        padding: 60px 20px;
     }
 
-    .sobre-nombre { font-size: 18px; margin-bottom: 32px; }
-
-    /* ── HABILIDADES MOBILE: lista vertical, items en fila ── */
-    .sobre-habilidades-grid {
+    .hab-grid {
         display: flex;
         flex-direction: column;
-        gap: 20px;
-        width: 100%;
+        gap: 32px;
     }
 
-    .sobre-hab-col {
-        display: grid;
-        grid-template-columns: 80px 1fr;
-        gap: 0 16px;
-        align-items: start;
+    /* Cada bloque mobile: texto arriba, imagen(es) abajo */
+    .hab-text--1,
+    .hab-text--2,
+    .hab-text--3 {
+        padding: 0;
+        justify-content: flex-start;
     }
 
-    /* El label ocupa la columna izquierda, alineado con la primera línea */
-    .sobre-hab-label {
-        margin-bottom: 0;
-        padding-top: 1px; /* alinear ópticamente con el texto */
-        grid-column: 1;
-        grid-row: 1;
+    .hab-img--1, .hab-img--2,
+    .hab-img--3, .hab-img--4, .hab-img--5 {
+        grid-column: auto;
+        grid-row: auto;
+        aspect-ratio: auto;
     }
 
-    /* Los items (p sin clase) van en la columna derecha, todos en una fila */
-    .sobre-hab-col p:not(.sobre-hab-label) {
-        grid-column: 2;
-        grid-row: 1;
-        display: inline;
+    /* Reordenar para mobile: texto → imagen(es) */
+    .hab-text--1 { order: 1; }
+    .hab-img--1  { order: 2; aspect-ratio: 4/5; width: 100%; }
+    .hab-img--2  { order: 3; aspect-ratio: 1/1; width: 100%; }
+
+    .hab-text--2 { order: 4; }
+    .hab-img--3  { order: 5; aspect-ratio: 4/3; width: 100%; }
+
+    .hab-text--3 { order: 6; }
+
+    /* Fila 3 mobile: dos imágenes en grid 2 columnas */
+    .hab-img--4,
+    .hab-img--5 {
+        order: 7;
+        aspect-ratio: 1/1;
+        width: calc(50% - 4px);
+        display: inline-block;
     }
 
-    /* Truco: meter todos los items en un contenedor flex-wrap usando CSS */
-    /* Los p van uno tras otro — los mostramos como inline con separador */
-    .sobre-hab-col p:not(.sobre-hab-label)::after {
-        content: ' · ';
-        color: var(--muted-light);
-    }
+    /* Wrapper para las dos imágenes juntas */
+    .hab-img--4 { margin-right: 4px; }
+    .hab-img--5 { margin-left: 4px; }
 
-    .sobre-hab-col p:not(.sobre-hab-label):last-child::after {
-        content: '';
-    }
-
-    /* Wrap los items en un div invisible — los ponemos en flow horizontal */
+    /* Items inline en mobile */
     .sobre-hab-col {
         display: flex;
         flex-direction: row;
         align-items: baseline;
         gap: 0;
         flex-wrap: nowrap;
+        margin-bottom: 8px;
     }
 
     .sobre-hab-label {
         flex-shrink: 0;
         width: 72px;
         margin-bottom: 0;
-        padding-top: 0;
     }
 
-    /* Contenedor de items — los p en línea */
     .sobre-hab-col p:not(.sobre-hab-label) {
         font-size: 12px;
         line-height: 1.6;
@@ -908,14 +895,13 @@ body.intro-active #navbar { opacity: 0; }
         white-space: nowrap;
     }
 
-    .sobre-grid {
-        grid-template-columns: 1fr 1fr;
-        padding: 0 25px;
+    .sobre-hab-col p:not(.sobre-hab-label)::after {
+        content: ' · ';
+        color: var(--muted-light);
     }
 
-    /* Sin animación de escala en mobile — queda estático */
-    .sobre-img-placeholder-inner {
-        transform: scale(1) !important;
+    .sobre-hab-col p:not(.sobre-hab-label):last-child::after {
+        content: '';
     }
 
     #contacto { height: auto; min-height: 100vh; padding: 80px 24px; }

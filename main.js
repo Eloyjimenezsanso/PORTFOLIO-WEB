@@ -75,62 +75,49 @@ function applyHeroParallax() {
 }
 
 // ─────────────────────────────────────────────────────────────
-//  PARALLAX SOBRE MÍ + ESCALA
+//  PARALLAX SOBRE MÍ — nuevo hab-grid
 // ─────────────────────────────────────────────────────────────
-let sobreOffsetTop = null
 
-function applySobreParallax() {
-    const section = document.getElementById('sobre-mi')
-    if (!section) return
+function setupHabReveal() {
+    const items = document.querySelectorAll('.hab-reveal')
+    if (!items.length) return
 
-    if (sobreOffsetTop === null) sobreOffsetTop = section.offsetTop
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible')
+                observer.unobserve(entry.target)
+            }
+        })
+    }, { threshold: 0.15 })
 
-    const scrolled = window.scrollY - sobreOffsetTop
-    if (scrolled < 0) return
+    items.forEach(item => observer.observe(item))
+}
 
-    const col1      = document.getElementById('sobreCol1')
-    const col2      = document.getElementById('sobreCol2')
-    const habCols   = document.querySelectorAll('.sobre-hab-col')
-    const habTitulo = document.querySelector('.sobre-habilidades-titulo')
+function applyHabParallax() {
+    const isMobile = window.innerWidth <= 768
+    if (isMobile) return
 
-    // ── PARALLAX COLUMNAS ────────────────────────────────────
-    const BASE_OFFSET = 180
-    if (col1) col1.style.transform = `translateY(${-scrolled * 0.08}px)`
-    if (col2) col2.style.transform = `translateY(${BASE_OFFSET - scrolled * 0.22}px)`
+    const winH = window.innerHeight
 
-    // ── ESCALA POR IMAGEN ────────────────────────────────────
-    const scaleFrom = 0.92
-    const scaleTo   = 1.0
-    const winH      = window.innerHeight
-
-    document.querySelectorAll('.sobre-img-placeholder').forEach(placeholder => {
-        const inner = placeholder.querySelector('.sobre-img-placeholder-inner')
+    document.querySelectorAll('.hab-reveal.is-visible').forEach(wrapper => {
+        const inner = wrapper.querySelector('.hab-img-inner')
         if (!inner) return
 
-        const rect = placeholder.getBoundingClientRect()
+        const rect     = wrapper.getBoundingClientRect()
+        const centerY  = rect.top + rect.height * 0.5
+        const progress = (centerY - winH * 0.5) / (winH * 0.5) // -1 → +1
+        const clampP   = Math.max(-1, Math.min(1, progress))
+        const offsetY  = clampP * 12 // máx 12px de desplazamiento
 
-        // progress: 0 cuando entra por abajo, 1 cuando su centro llega al centro de pantalla
-        const startTrigger = winH
-        const endTrigger   = winH * 0.5
-
-        // Usamos el borde superior de la imagen como referencia
-        const progress = Math.max(0, Math.min(1, (startTrigger - rect.top) / (startTrigger - endTrigger)))
-        const eased    = 1 - Math.pow(1 - progress, 2)
-        // Clamp estricto: nunca por debajo de scaleFrom ni por encima de scaleTo
-        const scale    = Math.min(scaleTo, Math.max(scaleFrom, scaleFrom + (scaleTo - scaleFrom) * eased))
-
-        const scaleStr = `scale(${scale.toFixed(4)})`
-        inner.style.transform = scaleStr
-        inner.style.webkitTransform = scaleStr
+        // Combinar parallax con el scale (1.0 cuando visible)
+        inner.style.transform = `scale(1.0) translateY(${offsetY.toFixed(2)}px)`
+        inner.style.webkitTransform = `scale(1.0) translateY(${offsetY.toFixed(2)}px)`
     })
+}
 
-    // ── PARALLAX TEXTO ───────────────────────────────────────
-    const factores = [0.14, 0.09, 0.05]
-    habCols.forEach((col, i) => {
-        col.style.transform = `translateY(${-scrolled * (factores[i] || 0.05)}px)`
-    })
-
-    if (habTitulo) habTitulo.style.transform = `translateY(${-scrolled * 0.20}px)`
+function applySobreParallax() {
+    applyHabParallax()
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -511,6 +498,7 @@ window.addEventListener('load', () => {
 
     buildCarousel()
     buildIntro()
+    setupHabReveal()
 
     const menuBtn    = document.getElementById('menuBtn')
     const mobileMenu = document.getElementById('mobileMenu')
