@@ -108,7 +108,7 @@ function applyHabParallax() {
         const centerY  = rect.top + rect.height * 0.5
         const progress = (centerY - winH * 0.5) / (winH * 0.5) // -1 → +1
         const clampP   = Math.max(-1, Math.min(1, progress))
-        const offsetY  = clampP * 12 // máx 12px de desplazamiento
+        const offsetY  = clampP * 30 // máx 12px de desplazamiento
 
         // Combinar parallax con el scale (1.0 cuando visible)
         inner.style.transform = `scale(1.0) translateY(${offsetY.toFixed(2)}px)`
