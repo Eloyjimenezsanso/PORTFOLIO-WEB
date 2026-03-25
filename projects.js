@@ -81,11 +81,11 @@ const PROJECTS = [
             { type: "image", src: "assets/projects/cocina/cocina8.jpg", cols: 3 },
             { type: "image", src: "assets/projects/cocina/cocina9.jpg", cols: 3 },
             { type: "image", src: "assets/projects/cocina/cocina6.jpg", cols: 3 },
-            { type: "gif", src: "assets/projects/reel/reel_dimoni.gif", cols: 2 },
+            { type: "video", src: "assets/projects/reel/reel_dimoni.mp4", cols: 2 },
             { type: "video", src: "assets/projects/reel/reel_paisaje.mp4", cols: 2 },
-            { type: "gif", src: "assets/projects/reel/reel_bolas1.gif", cols: 3 },
-            { type: "gif", src: "assets/projects/reel/reel_bolas2.gif", cols: 3 },
-            { type: "gif", src: "assets/projects/reel/reel_bolas3.gif", cols: 3 },
+            { type: "video", src: "assets/projects/reel/reel_bolas1.mp4", cols: 3 },
+            { type: "video", src: "assets/projects/reel/reel_bolas2.mp4", cols: 3 },
+            { type: "video", src: "assets/projects/reel/reel_bolas3.mp4", cols: 3 },
             { type: "video", src: "assets/projects/blackfriday/bf_02.mp4", cols: 1 },
 
         ]
