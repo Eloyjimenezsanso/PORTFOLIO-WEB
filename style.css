@@ -835,76 +835,75 @@ body.intro-active #navbar { opacity: 0; }
         gap: 32px;
     }
 
-    /* Cada bloque mobile: texto arriba, imagen(es) abajo */
+    /* Textos alineados a la izquierda */
     .hab-text--1,
     .hab-text--2,
     .hab-text--3 {
         padding: 0;
         justify-content: flex-start;
+        align-items: flex-start;
+        text-align: left;
     }
 
-    .hab-img--1, .hab-img--2,
-    .hab-img--3, .hab-img--4, .hab-img--5, .hab-img--6 {
-        grid-column: auto;
-        grid-row: auto;
-        aspect-ratio: auto;
-    }
-
-    /* Reordenar para mobile: texto → imagen(es) */
-    .hab-text--1 { order: 1; }
-    .hab-img--1  { order: 2; aspect-ratio: 3/2; width: 100%; }
-    .hab-img--2  { order: 3; aspect-ratio: 3/2; width: 100%; }
-
-    .hab-text--2 { order: 4; }
-    .hab-img--3  { order: 5; aspect-ratio: 3/2; width: 100%; }
-
-    .hab-text--3 { order: 6; }
-
-    /* Fila 3 mobile: dos imágenes en grid 2 columnas */
-    .hab-img--5,
-    .hab-img--6 {
-        order: 7;
-        aspect-ratio: 1/1;
-        width: calc(50% - 4px);
-        display: inline-block;
-    }
-
-    /* Wrapper para las dos imágenes juntas */
-    .hab-img--4 { margin-right: 4px; }
-    .hab-img--5 { margin-left: 4px; }
-
-    /* Items inline en mobile */
     .sobre-hab-col {
-        display: flex;
-        flex-direction: column;
-        align-items: baseline;
-        gap: 0;
-        flex-wrap: nowrap;
-        margin-bottom: 8px;
+        align-items: flex-start;
     }
 
     .sobre-hab-label {
-        flex-shrink: 0;
-        width: 72px;
-        margin-bottom: 0;
+        margin-bottom: 4px;
     }
 
+    /* Reset grid positions */
+    .hab-img--1, .hab-img--2,
+    .hab-img--3, .hab-img--4,
+    .hab-img--5, .hab-img--6 {
+        grid-column: auto;
+        grid-row: auto;
+        width: 100%;
+    }
+
+    /* BLOQUE ADOBE: título + texto → img1 → img2 */
+    .hab-text--1 { order: 1; }
+    .hab-img--1  { order: 2; aspect-ratio: 3/2; }
+    .hab-img--2  { order: 3; aspect-ratio: 3/2; }
+
+    /* BLOQUE UI/UX: texto → img3 → img4 */
+    .hab-text--2 { order: 4; }
+    .hab-img--3  { order: 5; aspect-ratio: 3/2; }
+    .hab-img--4  { order: 6; aspect-ratio: 3/2; }
+
+    /* BLOQUE IA + 3D: dos columnas lado a lado → img5 → img6 */
+    .hab-text--3 {
+        order: 7;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0;
+        padding: 0;
+        width: 100%;
+    }
+
+    .hab-img--5  { order: 8; aspect-ratio: 3/2; }
+    .hab-img--6  { order: 9; aspect-ratio: 3/2; }
+
+    /* Cada columna IA/3D ocupa su mitad con margen de seguridad */
+    .hab-text--3 .sobre-hab-col {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+
+    /* Items en columna (no inline) */
     .sobre-hab-col p:not(.sobre-hab-label) {
         font-size: 12px;
         line-height: 1.6;
-        display: inline;
-        white-space: nowrap;
+        display: block;
+        white-space: normal;
     }
 
     .sobre-hab-col p:not(.sobre-hab-label)::after {
-        content: ' · ';
-        color: var(--muted-light);
-    }
-
-    .sobre-hab-col p:not(.sobre-hab-label):last-child::after {
         content: '';
     }
-
     #contacto { height: auto; min-height: 100vh; padding: 80px 24px; }
 
     .footer-info {
