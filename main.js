@@ -8,6 +8,8 @@ const GAP = window.innerWidth <= 768 ? 80 : 200
 const AUTO_SPEED     = 0.15
 const INTRO_DURATION = 2800
 
+const VERTICAL_OFFSETS = [0, -28, 18, -40, 12, -22, 35, -15, 28, -35]
+
 // ── Referencias DOM ──────────────────────────────────────────
 const introOverlay    = document.getElementById('introOverlay')
 const projectOverlay  = document.getElementById('projectOverlay')
@@ -63,15 +65,6 @@ function applyHeroParallax() {
     if (tickerSection) {
         tickerSection.style.transform = `translateY(${-scrolled * 0.35}px)`
     }
-
-    const cylinder = document.getElementById('carouselCylinder')
-    if (cylinder) {
-        const items = cylinder.querySelectorAll('.ticker-item')
-        items.forEach((item, i) => {
-            const extra = Math.sin(i * 0.8) * 0.12
-            item.style.marginTop = `${-scrolled * extra}px`
-        })
-    }
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -106,11 +99,10 @@ function applyHabParallax() {
 
         const rect     = wrapper.getBoundingClientRect()
         const centerY  = rect.top + rect.height * 0.5
-        const progress = (centerY - winH * 0.5) / (winH * 0.5) // -1 → +1
+        const progress = (centerY - winH * 0.5) / (winH * 0.5)
         const clampP   = Math.max(-1, Math.min(1, progress))
-        const offsetY  = clampP * 30 // máx 12px de desplazamiento
+        const offsetY  = clampP * 30
 
-        // Combinar parallax con el scale (1.0 cuando visible)
         inner.style.transform = `scale(1.0) translateY(${offsetY.toFixed(2)}px)`
         inner.style.webkitTransform = `scale(1.0) translateY(${offsetY.toFixed(2)}px)`
     })
@@ -140,8 +132,9 @@ function buildCarousel() {
         item.dataset.id    = project.id
         item.dataset.index = i
 
-        const angleY = i * angleStep
-        item.style.transform = `rotateY(${angleY}deg) translateZ(${radius}px)`
+        const angleY  = i * angleStep
+        const offsetY = VERTICAL_OFFSETS[i % VERTICAL_OFFSETS.length]
+        item.style.transform = `rotateY(${angleY}deg) translateZ(${radius}px) translateY(${offsetY}px)`
 
         const mediaWrap     = document.createElement('div')
         mediaWrap.className = 'ticker-media'
@@ -371,17 +364,18 @@ function buildIntro() {
                 introRAF = requestAnimationFrame(introLoop)
             } else {
                 introRAF = null
+
                 const items = cylinder.querySelectorAll('.ticker-item')
                 items.forEach((item, i) => {
-                    const angleY = i * angleStep
-                    item.style.transform = `rotateY(${angleY}deg) translateZ(${finalRadius}px)`
+                    const angleY  = i * angleStep
+                    const offsetY = VERTICAL_OFFSETS[i % VERTICAL_OFFSETS.length]
+                    item.style.transform = `rotateY(${angleY}deg) translateZ(${finalRadius}px) translateY(${offsetY}px)`
                 })
                 cylinder.style.transform = `rotateX(0deg) rotateY(${introAngle}deg)`
                 cylinderAngle = introAngle
 
                 startCarousel()
 
-                // Fade in de los títulos al terminar la intro
                 document.querySelectorAll('.ticker-label').forEach(label => {
                     label.style.opacity = '1'
                 })
@@ -511,22 +505,61 @@ window.addEventListener('load', () => {
 })
 
 // ─────────────────────────────────────────────────────────────
-//  8. EXPERIENCIA — SCROLL ABANICO (solo desktop)
+//  8. EXPERIENCIA — ABANICO vinculado al scroll (desktop) / STAGGER (mobile)
 // ─────────────────────────────────────────────────────────────
 function setupExperienciaScroll() {
-    // En mobile: layout estático, sin animación abanico
-    if (window.innerWidth <= 768) return
-
     const bloque    = document.querySelector('.sobre-bloque--experiencia')
     const container = document.querySelector('.experiencia-cards')
     const cards     = document.querySelectorAll('.exp-card')
     if (!bloque || !container || !cards.length) return
 
+    const isMobile = () => window.innerWidth <= 768
+
+    // ── Alturas variables desde data-height ──
+    function applyHeights() {
+        cards.forEach(card => {
+            const imgEl = card.querySelector('.exp-card-img')
+            if (!imgEl) return
+            if (isMobile()) {
+                imgEl.style.height      = ''
+                imgEl.style.aspectRatio = '1 / 1'
+            } else {
+                const h = imgEl.dataset.height || 380
+                imgEl.style.height      = `${h}px`
+                imgEl.style.aspectRatio = ''
+            }
+        })
+    }
+
+    applyHeights()
+
+    // ── MOBILE: stagger fade-in ──
+    if (isMobile()) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const card  = entry.target
+                    const index = Array.from(cards).indexOf(card)
+                    setTimeout(() => card.classList.add('is-visible'), index * 80)
+                    observer.unobserve(card)
+                }
+            })
+        }, { threshold: 0.15 })
+
+        cards.forEach(card => observer.observe(card))
+        return
+    }
+
+    // ── DESKTOP: abanico vinculado al scroll ──
     let offsets = []
 
     function calcOffsets() {
-        cards.forEach(card => card.style.transform = 'translateX(0px)')
-        container.style.gap = '16px'
+        // Reset temporal para medir posiciones reales
+        cards.forEach(card => {
+            card.style.transition = 'none'
+            card.style.transform  = 'translateX(0px)'
+            card.style.opacity    = '1'
+        })
 
         const firstRect = cards[0].getBoundingClientRect()
         offsets = Array.from(cards).map(card => {
@@ -535,31 +568,36 @@ function setupExperienciaScroll() {
         })
     }
 
-    function updateCards() {
-        const rect     = bloque.getBoundingClientRect()
-        const total    = window.innerHeight
-        const progress = Math.max(0, Math.min(1, 1 - (rect.top / (total * 0.9))))
+    function updateFan() {
+        const rect = bloque.getBoundingClientRect()
+        const winH = window.innerHeight
+
+        // progress: 0 = sección entra en pantalla, 1 = sección centrada
+        const progress = Math.max(0, Math.min(1, 1 - (rect.top / (winH * 0.7))))
         const eased    = 1 - Math.pow(1 - progress, 3)
 
+        const centerOffset = offsets[Math.floor(offsets.length / 2)] || 0
+
         cards.forEach((card, i) => {
-            const offset = offsets[i] || 0
-            card.style.transform = `translateX(${-offset + offset * eased}px)`
+            const finalX      = offsets[i] || 0
+            const displacement = (centerOffset - finalX) * (1 - eased)
+
+            card.style.transition = 'none'
+            card.style.transform  = `translateX(${displacement}px)`
+            card.style.opacity    = String(0.3 + eased * 0.7)
         })
     }
 
     setTimeout(() => {
         calcOffsets()
-        updateCards()
+        updateFan()
     }, 200)
 
-    window.addEventListener('scroll', updateCards, { passive: true })
+    window.addEventListener('scroll', updateFan, { passive: true })
     window.addEventListener('resize', () => {
-        // Si se redimensiona a mobile, limpiar transforms
-        if (window.innerWidth <= 768) {
-            cards.forEach(c => c.style.transform = '')
-            return
-        }
+        applyHeights()
+        if (isMobile()) return
         calcOffsets()
-        updateCards()
+        updateFan()
     })
 }

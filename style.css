@@ -389,7 +389,7 @@ body {
 .experiencia-cards {
     display: flex;
     gap: 16px;
-    align-items: flex-start;
+    align-items: flex-end; /* alineadas abajo para efecto editorial */
     padding: 0 25px;
     width: 100%;
     box-sizing: border-box;
@@ -405,9 +405,9 @@ body {
 
 .exp-card-img {
     width: 100%;
-    aspect-ratio: 3 / 4;
     overflow: hidden;
     background: #e0ddd8;
+    /* height se aplica via JS con data-height */
 }
 
 .exp-card-img img {
@@ -435,6 +435,20 @@ body {
     font-weight: 300;
     color: var(--muted);
     letter-spacing: 0.03em;
+}
+
+/* Mobile stagger — estado inicial oculto */
+@media (max-width: 768px) {
+    .exp-card {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.5s ease, transform 0.5s var(--ease-out);
+    }
+
+    .exp-card.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* ── SECCIÓN 3: FOOTER ───────────────────────────────────── */
